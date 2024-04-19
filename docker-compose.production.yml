@@ -1,0 +1,8 @@
+version: "3"
+services:
+  backend:
+    container_name: log-nest-backend
+    build: .
+    ports:
+     - 1099:5438
+    restart: always
