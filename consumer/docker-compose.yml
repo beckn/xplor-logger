@@ -11,6 +11,7 @@ services:
       - loki # Ensure Loki is started before Grafana.
     networks:
       - monitoring # Connect to the monitoring network.
+      
 
  # Define a Loki service for storing logs.
  loki:
@@ -32,7 +33,7 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER} # Set the default RabbitMQ user.
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS} # Set the default RabbitMQ password.
     ports:
-      # - "5672:5672" # Expose RabbitMQ on port 5672 (commented out).
+      - "5672:5672" # Expose RabbitMQ on port 5672 (commented out).
       - "15672:15672" # Expose RabbitMQ management interface on port 15672.
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq # Persist RabbitMQ data.

@@ -8,9 +8,7 @@ export default () => ({
     .valid('development', 'production', 'test', 'provision')
     .default('development'),
   PORT: Joi.number().port().required().default(8080),
-  RABBIT_URL: Joi.string().required(),
+  RABBIT_MQ_URL: Joi.string().required(),
   GRAFANA_PORT: Joi.number().port().required().default(3000),
   LOKI_URL: Joi.string().required(),
-  
- 
 });

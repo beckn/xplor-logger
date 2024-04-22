@@ -4,29 +4,29 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { GrafanaLoggerService } from './logger.service';
 import { GrafanaLoggerController } from './logger.controller';
+import { ConfigService } from '@nestjs/config';
 
 // Define a module for handling Grafana log messages
+
 @Module({
- imports: [
-    // Register the ClientsModule with configuration for connecting to a RabbitMQ server
-    ClientsModule.register([
+  imports: [
+    ClientsModule.registerAsync([
       {
-        // Name of the microservice client
         name: 'LOGGER_SERVICE',
-        // Transport protocol used by the microservice
-        transport: Transport.RMQ,
-        options: {
-          // The URL of the RabbitMQ server, retrieved from environment variables
-          urls: [process.env.RABBIT_URL],
-          // The name of the RabbitMQ queue to listen to, also retrieved from environment variables
-          queue: process.env.QUEUE_NAME,
-        },
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.get<string>('RABBIT_MQ_URL')],
+            queue: configService.get<string>('QUEUE_NAME'),
+          },
+        }),
+        inject: [ConfigService],
       },
     ]),
- ],
- // Declare the controllers that are part of this module
- controllers: [GrafanaLoggerController],
- // Declare the providers (services) that are part of this module
- providers: [GrafanaLoggerService],
+  ],
+  // Declare the controllers that are part of this module
+  controllers: [GrafanaLoggerController],
+  // Declare the providers (services) that are part of this module
+  providers: [GrafanaLoggerService],
 })
 export class GrafanaLoggerModule {}

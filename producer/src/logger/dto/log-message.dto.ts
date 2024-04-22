@@ -22,6 +22,4 @@ export class LogMessageDto {
   @IsOptional()
   @IsString()
   methodName?: string;
-
- 
 }

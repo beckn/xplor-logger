@@ -4,9 +4,8 @@
 export default () => ({
   nodeEnv: process.env.NODE_ENV,
   port: parseInt(process.env.PORT, 10),
-  rabbitUrl: process.env.RABBIT_URL,
+  rabbitMqUrl: process.env.RABBIT_MQ_URL,
   lokiUrl: process.env.LOKI_URL,
-  localRabbitUrl: process.env.LOCAL_RABBIT_URL,
-  queueName: process.env.QUEUE_NAME
-
+  localRabbitMqUrl: process.env.LOCAL_RABBIT_URL,
+  queueName: process.env.QUEUE_NAME,
 });

@@ -1,11 +1,78 @@
 version: "3"
 services:
-  backend:
-    container_name: log-nest-backend
-    build: .
+  grafana:
+    image: grafana/grafana:latest
     ports:
-     - 1099:3000
+      - '3000:3000' # Expose Grafana on port 3000.
+    volumes:
+      - grafana-data:/var/lib/grafana # Persist Grafana data.
+    depends_on:
+      - loki # Ensure Loki is started before Grafana.
+    networks:
+      - monitoring # Connect to the monitoring network.
     restart: always
+
+  # Define a Loki service for storing logs.
+  loki:
+      image: grafana/loki:latest
+      hostname: loki # Set the hostname to 'loki'.
+      ports:
+        - '3100:3100' # Expose Loki on port 3100.
+      volumes:
+        - loki-data:/data # Persist Loki data.
+      networks:
+        - monitoring # Connect to the monitoring network.
+      restart: always
+
+  # Define a RabbitMQ service for message queuing.
+  rabbitmq:
+      image: rabbitmq:3-management
+      container_name: rabbitmq # Name the container 'rabbitmq'.
+      hostname: rabbitmq # Set the hostname to 'rabbitmq'.
+      environment:
+        RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER} # Set the default RabbitMQ user.
+        RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS} # Set the default RabbitMQ password.
+      ports:
+        # - "5672:5672" # Expose RabbitMQ on port 5672 (commented out).
+        - "15672:15672" # Expose RabbitMQ management interface on port 15672.
+      volumes:
+        - rabbitmq_data:/var/lib/rabbitmq # Persist RabbitMQ data.
+      networks:
+        - monitoring # Connect to the monitoring network.
+      restart: always
+
+
+  log-producer:
+      build:
+        context: './producer'
+        dockerfile: Dockerfile
+      ports:
+        - "8000:8000" # Assuming proj1 runs on port 3000
+      networks:
+        - monitoring 
+      environment:
+        RABBITMQ_HOST: rabbitmq # Set RabbitMQ hostname as an environment variable
+
+  log-consumer:
+    build:
+      context: './consumer'
+      dockerfile: Dockerfile
+    ports:
+      - "8080:5672"
+    networks:
+      - monitoring 
+    environment:
+      RABBITMQ_HOST: rabbitmq # Set RabbitMQ hostname as an environment variable
+
+networks:
+  monitoring:
+    driver: bridge
+
+# Define volumes for persistent data storage.
+volumes:
+ grafana-data:
+ loki-data:
+ rabbitmq_data:
 
 
     
