@@ -1,0 +1,62 @@
+version: '3'
+services:
+ # Define a Grafana service for visualizing metrics and logs.
+ grafana:
+    image: grafana/grafana:latest
+    ports:
+      - '3000:3000' # Expose Grafana on port 3000.
+    volumes:
+      - grafana-data:/var/lib/grafana # Persist Grafana data.
+    depends_on:
+      - loki # Ensure Loki is started before Grafana.
+    networks:
+      - monitoring # Connect to the monitoring network.
+
+ # Define a Loki service for storing logs.
+ loki:
+    image: grafana/loki:latest
+    hostname: loki # Set the hostname to 'loki'.
+    ports:
+      - '3100:3100' # Expose Loki on port 3100.
+    volumes:
+      - loki-data:/data # Persist Loki data.
+    networks:
+      - monitoring # Connect to the monitoring network.
+
+ # Define a RabbitMQ service for message queuing.
+ rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq # Name the container 'rabbitmq'.
+    hostname: rabbitmq # Set the hostname to 'rabbitmq'.
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER} # Set the default RabbitMQ user.
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS} # Set the default RabbitMQ password.
+    ports:
+      # - "5672:5672" # Expose RabbitMQ on port 5672 (commented out).
+      - "15672:15672" # Expose RabbitMQ management interface on port 15672.
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq # Persist RabbitMQ data.
+    networks:
+      - monitoring # Connect to the monitoring network.
+
+ # Define an application service.
+ app:
+    build: . # Build the application from the current directory.
+    ports:
+      - "8080:5672" # Expose the application on port 8080.
+    depends_on:
+      - rabbitmq # Ensure RabbitMQ is started before the application.
+    environment:
+      RABBIT_URL: ${RABBIT_URL} # Set the RabbitMQ URL.
+    networks:
+      - monitoring # Connect to the monitoring network.
+
+# Define a network for the monitoring services.
+networks:
+ monitoring:
+
+# Define volumes for persistent data storage.
+volumes:
+ grafana-data:
+ loki-data:
+ rabbitmq_data:
