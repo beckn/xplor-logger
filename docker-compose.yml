@@ -59,6 +59,7 @@ services:
         RABBIT_MQ_URL: ${RABBIT_MQ_URL}
         LOCAL_RABBIT_MQ_URL: ${LOCAL_RABBIT_MQ_URL}
         QUEUE_NAME: ${QUEUE_NAME}
+      
 
 
   log-consumer:
@@ -79,6 +80,8 @@ services:
       QUEUE_NAME: ${QUEUE_NAME}
       GRAFANA_PORT: ${GRAFANA_PORT}
       LOKI_URL: ${LOKI_URL}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER} # Set the default RabbitMQ user.
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
   
   nginx:
     image: nginx:alpine
