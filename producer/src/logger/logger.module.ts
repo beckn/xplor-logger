@@ -1,10 +1,11 @@
 // Import necessary decorators and services from NestJS and local files
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
 
 import { GrafanaLoggerService } from './logger.service';
 import { GrafanaLoggerController } from './logger.controller';
-import { ConfigService } from '@nestjs/config';
+
 
 // Define a module for handling Grafana log messages
 
