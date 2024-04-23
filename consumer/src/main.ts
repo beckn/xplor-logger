@@ -8,7 +8,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   // Create a microservice instance using the AppModule and the specified microservice options.
   // The microservice is configured to use RabbitMQ as the transport layer.
-  console.log("localhost1234567890",process.env.RABBIT_MQ_URL,process.env.RABBITMQ_DEFAULT_USER,process.env.RABBITMQ_DEFAULT_PASS)
+  console.log("localhost1234567890",process.env.RABBIT_MQ_URL)
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
@@ -17,14 +17,7 @@ async function bootstrap() {
       // Configure the microservice options, including the RabbitMQ URL and queue name.
       options: {
         // The URL of the RabbitMQ server. This is retrieved from the environment variables.
-        urls: [
-          {
-            protocol: 'amqp',
-            hostname: 'rabbitmq',
-            port: 5672,
-            username: process.env.RABBITMQ_DEFAULT_USER,
-            password: process.env.RABBITMQ_DEFAULT_PASS,
-          }],
+        urls: [process.env.RABBIT_MQ_URL],
         // The name of the RabbitMQ queue to listen to. This is also retrieved from the environment variables.
         queue: process.env.QUEUE_NAME,
       },

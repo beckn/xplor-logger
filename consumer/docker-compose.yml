@@ -32,9 +32,9 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER} # Set the default RabbitMQ user.
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS} # Set the default RabbitMQ password.
-    ports:
-      - "5672:5672" # Expose RabbitMQ on port 5672 (commented out).
-      - "15672:15672" # Expose RabbitMQ management interface on port 15672.
+    # ports:
+    #   - "5672:5672" # Expose RabbitMQ on port 5672 (commented out).
+    #   - "15672:15672" # Expose RabbitMQ management interface on port 15672.
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq # Persist RabbitMQ data.
     networks:
