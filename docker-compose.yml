@@ -5,6 +5,7 @@ services:
     # ports:
     #   - '3000:3000' # Expose Grafana on port 3000.
     volumes:
+      - ./grafana.ini:/etc/grafana/grafana.ini:ro
       - grafana-data:/var/lib/grafana # Persist Grafana data.
     depends_on:
       - loki # Ensure Loki is started before Grafana.
