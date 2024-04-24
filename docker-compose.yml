@@ -25,8 +25,8 @@ services:
     #      EOF
     #     /run.sh
     image: grafana/grafana:latest
-    ports:
-      - '3000:3000' # Expose Grafana on port 3000.
+    # ports:
+    #   - '3000:3000' # Expose Grafana on port 3000.
     volumes:
       - ./grafana.ini:/etc/grafana/grafana.ini:ro
       - grafana-data:/var/lib/grafana # Persist Grafana data.
