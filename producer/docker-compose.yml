@@ -1,0 +1,8 @@
+version: "3"
+services:
+  container_name: log-nest-producer-backend
+  backend:
+    build: .
+    ports:
+     - 1099:8000
+    restart: always

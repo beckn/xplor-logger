@@ -1,5 +1,4 @@
 FROM node:18-alpine
-ENV NODE_ENV=development
 WORKDIR /job
 COPY package*.json ./
 COPY tsconfig.json ./
