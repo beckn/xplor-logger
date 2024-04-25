@@ -5,13 +5,16 @@ services:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_SERVER_ROOT_URL=http://my.grafana.server/
+      - GF_INSTALL_IMAGE_RENDERER_PLUGIN=true
+
    
     image: grafana/grafana:latest
     # ports:
     #   - '3000:3000' # Expose Grafana on port 3000.
     volumes:
       - ./grafana.ini:/etc/grafana/grafana.ini:ro
-      - ./plugins:/var/lib/grafana/plugins  # Mount datasource configuration
       - grafana-data:/var/lib/grafana # Persist Grafana data.
     depends_on:
       - loki # Ensure Loki is started before Grafana.
