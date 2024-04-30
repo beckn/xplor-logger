@@ -8,7 +8,6 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   // Create a microservice instance using the AppModule and the specified microservice options.
   // The microservice is configured to use RabbitMQ as the transport layer.
-  console.log('localhost1234567890', process.env.RABBIT_MQ_URL);
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
