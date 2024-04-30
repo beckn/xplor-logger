@@ -67,6 +67,7 @@ services:
         RABBIT_MQ_URL: ${RABBIT_MQ_URL}
         LOCAL_RABBIT_MQ_URL: ${LOCAL_RABBIT_MQ_URL}
         QUEUE_NAME: ${QUEUE_NAME}
+      restart: always
       
 
 
@@ -90,16 +91,17 @@ services:
       LOKI_URL: ${LOKI_URL}
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER} # Set the default RabbitMQ user.
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    restart: always
   
   nginx:
-    image: nginx:alpine
-    container_name: log_nginx_container
-    restart: always
-    ports:
+      image: nginx:alpine
+      container_name: log_nginx_container
+      restart: always
+      ports:
       - "1099:8080"
-    volumes:
+      volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-    networks:
+      networks:
       - xplor-network 
 
 networks:
