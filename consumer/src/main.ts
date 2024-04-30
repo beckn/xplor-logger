@@ -3,13 +3,12 @@ import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 
-
 // Define an asynchronous function to bootstrap the application.
 // This function is responsible for setting up the microservice and starting it.
 async function bootstrap() {
   // Create a microservice instance using the AppModule and the specified microservice options.
   // The microservice is configured to use RabbitMQ as the transport layer.
-  console.log("localhost1234567890",process.env.RABBIT_MQ_URL)
+  console.log('localhost1234567890', process.env.RABBIT_MQ_URL);
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
@@ -24,7 +23,6 @@ async function bootstrap() {
       },
     },
   );
- 
 
   // Start the microservice. This will begin listening for messages on the specified RabbitMQ queue.
   app.listen();
