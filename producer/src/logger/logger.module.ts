@@ -6,7 +6,6 @@ import { ConfigService } from '@nestjs/config';
 import { GrafanaLoggerService } from './logger.service';
 import { GrafanaLoggerController } from './logger.controller';
 
-
 // Define a module for handling Grafana log messages
 
 @Module({

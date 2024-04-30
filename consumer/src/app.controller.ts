@@ -17,7 +17,6 @@ export class AppController {
   pushLogsToGrafana(@Payload() logs: LogMessageDto) {
     // Call the pushLogsToGrafana method of the AppService with the log message details.
     // This method is responsible for processing and forwarding the log messages to Grafana.
-    console.log(logs, 'HELLO123456');
     return this.appService.pushLogsToGrafana(
       logs.serviceName,
       logs.message,

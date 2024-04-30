@@ -11,6 +11,7 @@ services:
       - loki # Ensure Loki is started before Grafana.
     networks:
       - monitoring # Connect to the monitoring network.
+    restart: always
       
 
  # Define a Loki service for storing logs.
@@ -23,6 +24,7 @@ services:
       - loki-data:/data # Persist Loki data.
     networks:
       - monitoring # Connect to the monitoring network.
+    restart: always
 
  # Define a RabbitMQ service for message queuing.
  rabbitmq:
@@ -39,6 +41,7 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq # Persist RabbitMQ data.
     networks:
       - monitoring # Connect to the monitoring network.
+    restart: always
 
  # Define an application service.
  app:
@@ -51,6 +54,7 @@ services:
       RABBIT_URL: ${RABBIT_URL} # Set the RabbitMQ URL.
     networks:
       - monitoring # Connect to the monitoring network.
+    restart: always
 
 # Define a network for the monitoring services.
 networks:
