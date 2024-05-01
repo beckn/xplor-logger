@@ -29,8 +29,8 @@ services:
     #   - "3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana
-    # depends_on:
-    #   - loki # Ensure Loki is started before Grafana.
+    depends_on:
+      - loki # Ensure Loki is started before Grafana.
     networks:
       - xplor-network # Connect to the xplor-network network.
     restart: always
