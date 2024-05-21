@@ -12,11 +12,11 @@ script:
     - mv /home/ubuntu/script/.env $Path && cd $Path
     - |
       sshpass -p $Xplor_Password ssh $Xplor_Username@Xplor_IP "
-      if [[ -d log-nest-backend ]]; then
-      cd /home/ubuntu/log-nest-backend
-      docker-compose down
-      cd /home/ubuntu &&  sudo rm -rf log-nest-backend
-      fi "
+        if [[ -d log-nest-backend ]]; then
+          cd /home/ubuntu/log-nest-backend
+          docker-compose down
+          cd /home/ubuntu &&  sudo rm -rf log-nest-backend
+        fi "
       
     - sshpass -p $Xplor_Password ssh $Xplor_Username@$Xplor_IP  "git clone -b develop https://user:'$GITLAB_ACCESS_TOKEN'git@gitlab.thewitslab.com/wil-workspace/xplor/log-nest-backend.git"
     - sshpass -p $Xplor_Password scp .env $Xplor_Username@$Xplor_IP:/home/ubuntu/log-nest-backend
