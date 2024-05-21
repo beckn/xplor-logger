@@ -6,7 +6,7 @@ deploy:dev:
   tags:
     - gcp
   script:
-    - echo "Deployment on Server."
+    - echo "Deployment on Dev Server."
     - Path=$(pwd)
     - cd /home/ubuntu/script && ./env_script.sh dev log-nest-backend-dev $VAULT_TOKEN && cd $Path
     - mv /home/ubuntu/script/.env $Path && cd $Path
@@ -15,7 +15,7 @@ deploy:dev:
         if [[ -d log-nest-backend ]]; then
           cd /home/ubuntu/log-nest-backend
           docker-compose down
-          cd &&  sudo rm -rf log-nest-backend
+          cd /home/ubuntu/ &&  sudo rm -rf log-nest-backend
         fi "
 
     - sshpass -p $Xplor_Password ssh $Xplor_Username@$Xplor_IP  "git clone -b develop https://user:'$GITLAB_ACCESS_TOKEN'@gitlab.thewitslab.com/wil-workspace/xplor/log-nest-backend.git"
