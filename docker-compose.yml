@@ -1,6 +1,10 @@
 version: "3"
 services:
   grafana:
+    #logging:
+      #driver: "file-log-driver"
+      #options:
+        #fpath: "/docker/py-ondc-protocol.log"
     environment:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -37,6 +41,10 @@ services:
 
   # Define a Loki service for storing logs.
   loki:
+    #logging:
+      #driver: "file-log-driver"
+      #options:
+        #fpath: "/docker/py-ondc-protocol.log"
       image: grafana/loki:latest
       hostname: loki # Set the hostname to 'loki'.
       # ports:
@@ -50,6 +58,10 @@ services:
 
   # Define a RabbitMQ service for message queuing.
   rabbitmq:
+    #logging:
+      #driver: "file-log-driver"
+      #options:
+        #fpath: "/docker/py-ondc-protocol.log"
       image: rabbitmq:3-management
       container_name: rabbitmq # Name the container 'rabbitmq'.
       hostname: rabbitmq # Set the hostname to 'rabbitmq'.
@@ -67,6 +79,10 @@ services:
 
 
   log-producer:
+    #logging:
+      #driver: "file-log-driver"
+      #options:
+        #fpath: "/docker/py-ondc-protocol.log"
       build:
         context: './producer'
         dockerfile: Dockerfile
@@ -88,6 +104,10 @@ services:
 
 
   log-consumer:
+    #logging:
+      #driver: "file-log-driver"
+      #options:
+        #fpath: "/docker/py-ondc-protocol.log"
     build:
       context: './consumer'
       dockerfile: Dockerfile
@@ -110,6 +130,10 @@ services:
     restart: always
   
   nginx:
+    #logging:
+      #driver: "file-log-driver"
+      #options:
+        #fpath: "/docker/py-ondc-protocol.log"
       image: nginx:alpine
       container_name: log_nginx_container
       restart: always
