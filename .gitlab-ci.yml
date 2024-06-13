@@ -41,7 +41,7 @@ deploy-stage:
     - mv /home/ubuntu/script/.env $Path
     - |
       sshpass -p $XPLOR_STAGE_PASSWORD ssh $Xplor_Username@$XPLOR_STAGE_IP "
-        if [[ -d $CI_PROJECT_NAME ]]; then
+        if [[ -d "$CI_PROJECT_NAME" ]]; then
           cd /home/ubuntu/$CI_PROJECT_NAME
           docker-compose down
           cd /home/ubuntu/ && sudo rm -rf $CI_PROJECT_NAME
