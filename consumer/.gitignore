@@ -1,9 +1,6 @@
-/node_modules
-/build
+# compiled output
 /dist
-
-/producer/producer/coverage
-*.env
+/node_modules
 
 # Logs
 logs
@@ -36,4 +33,3 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-

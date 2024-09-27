@@ -1,11 +1,155 @@
 version: "3"
 services:
-  backend:
-    container_name: log-nest-backend
-    build: .
-    ports:
-     - 1099:3000
+  grafana:
+    logging:
+      driver: "file-log-driver"
+      options:
+        fpath: "/docker/grafana.log"
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        mkdir -p /etc/grafana/provisioning/datasources
+        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
+        apiVersion: 1
+        datasources:
+        - name: Loki
+          type: loki
+          access: proxy
+          orgId: 1
+          url: http://loki:3100
+          basicAuth: false
+          isDefault: true
+          version: 1
+          editable: false
+        EOF
+        /run.sh
+    image: grafana/grafana:latest
+    # ports:
+    #   - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - loki # Ensure Loki is started before Grafana.
+    networks:
+      - xplor-network # Connect to the xplor-network network.
     restart: always
 
+  # Define a Loki service for storing logs.
+  loki:
+    logging:
+      driver: "file-log-driver"
+      options:
+        fpath: "/docker/loki.log"
+      image: grafana/loki:latest
+      hostname: loki # Set the hostname to 'loki'.
+      # ports:
+      #   - '3100:3100' # Expose Loki on port 3100.
+      command: -config.file=/etc/loki/local-config.yaml
+      volumes:
+        - loki-data:/data # Persist Loki data.
+      networks:
+        - xplor-network # Connect to the xplor-network network.
+      restart: always
 
-    
+  # Define a RabbitMQ service for message queuing.
+  rabbitmq:
+    logging:
+      driver: "file-log-driver"
+      options:
+        fpath: "/docker/rabbitmq.log"
+      image: rabbitmq:3-management
+      container_name: rabbitmq # Name the container 'rabbitmq'.
+      hostname: rabbitmq # Set the hostname to 'rabbitmq'.
+      environment:
+        RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER} # Set the default RabbitMQ user.
+        RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS} # Set the default RabbitMQ password.
+      # ports:
+        # - "5672:5672" # Expose RabbitMQ on port 5672 (commented out).
+        # - "15672:15672" # Expose RabbitMQ management interface on port 15672.
+      volumes:
+        - rabbitmq_data:/var/lib/rabbitmq # Persist RabbitMQ data.
+      networks:
+        - xplor-network # Connect to the xplor-network network.
+      restart: always
+
+
+  log-producer:
+    logging:
+      driver: "file-log-driver"
+      options:
+        fpath: "/docker/log-producer.log"
+      build:
+        context: './producer'
+        dockerfile: Dockerfile
+      hostname: producer
+      # ports:
+        # - "8000:8000" # Assuming proj1 runs on port 3000
+      networks:
+        - xplor-network 
+      environment:
+        PORT: ${PRODUCER_PORT}
+        NODE_ENV: ${NODE_ENV}
+        RABBITMQ_HOST: rabbitmq # Set RabbitMQ hostname as an environment variable
+        PRODUCER_PORT: ${PRODUCER_PORT}
+        RABBIT_MQ_URL: ${RABBIT_MQ_URL}
+        LOCAL_RABBIT_MQ_URL: ${LOCAL_RABBIT_MQ_URL}
+        QUEUE_NAME: ${QUEUE_NAME}
+      restart: always
+      
+
+
+  log-consumer:
+    logging:
+      driver: "file-log-driver"
+      options:
+        fpath: "/docker/log-consumer.log"
+    build:
+      context: './consumer'
+      dockerfile: Dockerfile
+    hostname: consumer
+    # ports:
+    #   - "8080:5672"
+    networks:
+      - xplor-network 
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      RABBITMQ_HOST: rabbitmq # Set RabbitMQ hostname as an environment variable
+      PORT: ${PORT}
+      RABBIT_MQ_URL: ${RABBIT_MQ_URL}
+      LOCAL_RABBIT_MQ_URL: ${LOCAL_RABBIT_MQ_URL}
+      QUEUE_NAME: ${QUEUE_NAME}
+      GRAFANA_PORT: ${GRAFANA_PORT}
+      LOKI_URL: ${LOKI_URL}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER} # Set the default RabbitMQ user.
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    restart: always
+  
+  nginx:
+    logging:
+      driver: "file-log-driver"
+      options:
+        fpath: "/docker/nginx.log"
+      image: nginx:alpine
+      container_name: log_nginx_container
+      restart: always
+      ports:
+      - "1099:8080"
+      volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      networks:
+      - xplor-network 
+
+networks:
+  xplor-network:
+    driver: bridge
+
+# Define volumes for persistent data storage.
+volumes:
+ grafana-data:
+ loki-data:
+ rabbitmq_data:

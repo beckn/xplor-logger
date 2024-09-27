@@ -1,73 +1,75 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Logger Service with NestJS, RabbitMQ, Grafana, Loki, NGINX, and Docker
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project demonstrates the implementation of a logger service using modern technologies such as NestJS, RabbitMQ, Grafana, Loki, NGINX, and Docker. The service aims to provide efficient logging capabilities with distributed architecture, centralized log management, and load balancing using NGINX.
 
-## Description
+## Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+*   NestJS: A progressive Node.js framework for building efficient, reliable, and scalable server-side applications.
+*   RabbitMQ: A message broker that enables applications to communicate and scale easily, providing robust messaging features.
+*   Grafana: A leading open-source platform for monitoring and observability, allowing visualization and analysis of metrics collected from various sources.
+*   Loki: A horizontally-scalable, highly-available log aggregation system inspired by Prometheus.
+*   NGINX: A high-performance HTTP server and reverse proxy that also offers load balancing, caching, and TLS/SSL termination capabilities.
+*   Docker: A containerization platform that enables seamless deployment and scaling of applications.
 
-## Installation
+## Prerequisites
 
-```bash
-$ npm install
-```
+Ensure you have the following installed on your system:
 
-## Running the app
+*   Node.js and npm
+*   Docker and Docker Compose
 
-```bash
-# development
-$ npm run start
+## Getting Started
 
-# watch mode
-$ npm run start:dev
+1. **Clone the repository:**
 
-# production mode
-$ npm run start:prod
-```
+    ```bash
+    git clone <repository_url>
+    ```
 
-## Test
+2. **Navigate to the project directory:**
 
-```bash
-# unit tests
-$ npm run test
+    ```bash
+    cd logger-service
+    ```
 
-# e2e tests
-$ npm run test:e2e
+3. **Install dependencies:**
 
-# test coverage
-$ npm run test:cov
-```
+    ```bash
+    npm install
+    ```
 
-## Support
+4. **Start Docker containers:**
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+    ```bash
+    docker-compose up -d
+    ```
 
-## Stay in touch
+5. **Access the service at [http://localhost:3000](http://localhost:3000).**
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## Configuration
+
+*   Configure RabbitMQ connection settings in `src/config/rabbitmq.config.ts`.
+*   Grafana and Loki configurations can be adjusted in `docker-compose.yml` and related configuration files.
+*   NGINX configuration can be modified in `nginx/nginx.conf` to define load balancing and routing rules.
+
+## Usage
+
+*   Producer: Send log messages to the Logger Service using HTTP protocol.
+*   Consumer: Implement a RabbitMQ microservice to consume log messages from the RabbitMQ exchange configured in `src/config/rabbitmq.config.ts`.
+*   Grafana can be accessed at `http://localhost:3000` to create dashboards and visualize log data stored in Loki.
+
+## NGINX Setup
+
+*   NGINX is configured as a reverse proxy and load balancer to distribute incoming HTTP requests among multiple instances of the Logger Service.
+*   Modify the NGINX configuration (`nginx/nginx.conf`) according to your load balancing requirements and the number of Logger Service instances.
+
+## Contributing
+
+Contributions are welcome! Feel free to submit issues and pull requests.
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+This project is licensed under the MIT License.
